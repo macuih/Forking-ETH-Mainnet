@@ -1,0 +1,18 @@
+> const signers  = await ethers.getSigners()
+undefined
+> signers
+> const s0 = await signers[0].getAddress()
+undefined
+> s0
+'0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
+> await ethers.provider.getBalance(await signers[0].getAddress())
+10000000000000000000000n
+> const deployedContract = await ethers.deployContract("FlashLoan",["0x2f39d218133AFaB8F2B819B1066c7E434Ad94E9e"]);
+undefined
+> const dp  = await deployedContract.getAddress()
+undefined
+> dp
+'0x4F7c2894D115AC4b2b6B0544e3471fb10B4dfdF0'
+> await ethers.provider.getBalance(await signers[0].getAddress())
+9999999464083763813343n
+> const token = await ethers.getContractAt("IERC20", "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" )
