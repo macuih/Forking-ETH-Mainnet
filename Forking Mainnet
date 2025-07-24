@@ -23,7 +23,7 @@ module.exports = {
 ####For contract deployment for Aave specifically, using pooladressprovider to deploy contract (see below). Not sure what this means for my project. (This was also embedded in smart contract)
 - https://aave.com/docs/resources/addresses
 
-
+------What next steps are doing is defining what token is being used and defining that token via the tokens smart contract, then checking balance of an actual token holder-------
 ###Go to Etherscan Io, tokens, top tokens, USDC, holders: (see list of commands for all of specific commands)
 Take address of Token smart contract: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
 
