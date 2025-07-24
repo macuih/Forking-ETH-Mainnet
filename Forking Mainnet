@@ -1,0 +1,31 @@
+Alchemy access point to ETH mainnet.
+
+Need a hardhat config like this for localhost:
+require("@nomicfoundation/hardhat-toolbox");
+
+module.exports = {
+  defaultNetwork: "hardhat",
+  networks: {
+    hardhat: {
+      forking: {
+        url: "https://eth-mainnet.g.alchemy.com/v2/LOjQWeWDMSJB1ROfLl0XR", ///here is important - alchemy gives access to ETH mainnet through API/project
+        chainId: 31337,
+      }
+    },
+    localhost: {
+      url: "http://127.0.0.1:8545",
+      chainId: 31337,
+    }
+  },
+  solidity: "0.8.10",
+};
+
+####For contract deployment for Aave specifically, using pooladressprovider to deploy contract (see below). Not sure what this means for my project. (This was also embedded in smart contract)
+- https://aave.com/docs/resources/addresses
+
+
+###Go to Etherscan Io, tokens, top tokens, USDC, holders: (see list of commands for all of specific commands)
+Take address of Token smart contract: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
+
+Then take address of any holder:
+SKY: PSM: 0x37305B1cD40574E4C5Ce33f8e8306Be057fD7341
