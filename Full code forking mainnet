@@ -1,0 +1,280 @@
+Welcome to Node.js v18.20.8.
+Type ".help" for more information.
+> const signers  = await ethers.getSigners()
+undefined
+]
+> const s0 = await signers[0].getAddress()
+undefined
+> s0
+'0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266'
+> await ethers.provider.getBalance(await signers[0].getAddress())
+10000000000000000000000n
+> const deployedContract = await ethers.deployContract("FlashLoan",["0x2f39d218133AFaB8F2B819B1066c7E434Ad94E9e"]);
+undefined
+> const dp  = await deployedContract.getAddress()
+undefined
+> dp
+'0x4F7c2894D115AC4b2b6B0544e3471fb10B4dfdF0'
+> await ethers.provider.getBalance(await signers[0].getAddress())
+9999999078829851672038n
+> const token = await ethers.getContractAt("IERC20", "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48" )
+undefined
+> const USDC_holder  = '0xcEe284F754E854890e311e3280b767F80797180d'
+undefined
+> await token.balanceOf(dp)
+0n
+> await token.balanceOf(USDC_holder)
+84368820445115n
+> await network.provider.send("hardhat_setBalance", [ USDC_holder ,"0x1000000000000000000000",]);
+true
+> await network.provider.send("hardhat_impersonateAccount", [ USDC_holder ])
+true
+> const impersonatedSigner = await ethers.getSigner( USDC_holder )
+undefined
+> await token.connect(impersonatedSigner).transfer(dp, "2000000")
+ContractTransactionResponse {
+  provider: HardhatEthersProvider {
+    _hardhatProvider: LazyInitializationProviderAdapter {
+      _providerFactory: [AsyncFunction (anonymous)],
+      _emitter: [EventEmitter],
+      _initializingPromise: [Promise],
+      provider: [BackwardsCompatibilityProviderAdapter]
+    },
+    _networkName: 'localhost',
+    _blockListeners: [],
+    _transactionHashListeners: Map(0) {},
+    _eventListeners: []
+  },
+  blockNumber: 22991083,
+  blockHash: '0xc17f4615d030a05b1d225a1d3d10e4e821a73c13f77bf658ef9a896802b19829',
+  index: undefined,
+  hash: '0x7ac1f6ca45f27d9b00c748b93133b95bf184631e4512699f32c8347837c6b764',
+  type: 2,
+  to: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+  from: '0xcEe284F754E854890e311e3280b767F80797180d',
+  nonce: 1,
+  gasLimit: 30000000n,
+  gasPrice: 1113059368n,
+  maxPriorityFeePerGas: 168875032n,
+  maxFeePerGas: 1194983300n,
+  maxFeePerBlobGas: null,
+  data: '0xa9059cbb0000000000000000000000004f7c2894d115ac4b2b6b0544e3471fb10b4dfdf000000000000000000000000000000000000000000000000000000000001e8480',
+  value: 0n,
+  chainId: 31337n,
+  signature: Signature { r: "0x000000000000000000000000cee284f754e854890e311e3280b767f80797180d", s: "0x000000000000000000000000cee284f754e854890e311e3280b767f80797180d", yParity: 1, networkV: null },
+  accessList: [],
+  blobVersionedHashes: null,
+  authorizationList: null
+}
+>  await token.balanceOf(dp)
+2000000n
+> const tx = await deployedContract.requestFlashLoan('0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',1000000)
+undefined
+>  await token.balanceOf(dp)
+1999500n
+> tx.hash
+'0x50b8734e13fd9aa490ee8832ce99c9c63fe3240ed9c4ec129bf0249c278a5e24'
+>  let abi = [ "event Transfer(address indexed from, address indexed to, uint value)" ];
+undefined
+> iface = new ethers.Interface(abi)
+Interface {
+  fragments: [
+    EventFragment {
+      type: 'event',
+      inputs: [Array],
+      name: 'Transfer',
+      anonymous: false
+    }
+  ],
+  deploy: ConstructorFragment {
+    type: 'constructor',
+    inputs: [],
+    payable: false,
+    gas: null
+  },
+  fallback: null,
+  receive: false
+}
+>  const txReceipt = await ethers.provider.getTransactionReceipt(tx.hash);
+undefined
+> txReceipt
+TransactionReceipt {
+  provider: HardhatEthersProvider {
+    _hardhatProvider: LazyInitializationProviderAdapter {
+      _providerFactory: [AsyncFunction (anonymous)],
+      _emitter: [EventEmitter],
+      _initializingPromise: [Promise],
+      provider: [BackwardsCompatibilityProviderAdapter]
+    },
+    _networkName: 'localhost',
+    _blockListeners: [],
+    _transactionHashListeners: Map(0) {},
+    _eventListeners: []
+  },
+  to: '0x4F7c2894D115AC4b2b6B0544e3471fb10B4dfdF0',
+  from: '0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266',
+  contractAddress: null,
+  hash: '0x50b8734e13fd9aa490ee8832ce99c9c63fe3240ed9c4ec129bf0249c278a5e24',
+  index: 0,
+  blockHash: '0x70676fe561237b91e10a01107bd2d45e5fcfe031060832e8464f5e863f717752',
+  blockNumber: 22991084,
+  logsBloom: '0x0000002000000000000010000000000000000000000000000000000000000002000000100000000000000200000000000000000000000000000000000020000000000000000000100800000800000000000000000000000000000000000000000000000002000000000000000000080000400000040000000000001000010008000000000000000000000000000000028000000001000000000000000000000802000000000020000000000000000000000000000010000000000000000001000000000200000000000000200000000000000000000c000000000000000020000010000000000020000000000000000004000000000000000000000000000000',
+  gasUsed: 160465n,
+  blobGasUsed: undefined,
+  cumulativeGasUsed: 160465n,
+  gasPrice: 995526106n,
+  blobGasPrice: undefined,
+  type: 2,
+  status: 1,
+  root: undefined
+}
+> txReceipt.logs
+[
+  Log {
+    provider: HardhatEthersProvider {
+      _hardhatProvider: [LazyInitializationProviderAdapter],
+      _networkName: 'localhost',
+      _blockListeners: [],
+      _transactionHashListeners: Map(0) {},
+      _eventListeners: []
+    },
+    transactionHash: '0x50b8734e13fd9aa490ee8832ce99c9c63fe3240ed9c4ec129bf0249c278a5e24',
+    blockHash: '0x70676fe561237b91e10a01107bd2d45e5fcfe031060832e8464f5e863f717752',
+    blockNumber: 22991084,
+    removed: undefined,
+    address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+    data: '0x00000000000000000000000000000000000000000000000000000000000f4240',
+    topics: [
+      '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+      '0x00000000000000000000000098c23e9d8f34fefb1b7bd6a91b7ff122f4e16f5c',
+      '0x0000000000000000000000004f7c2894d115ac4b2b6b0544e3471fb10b4dfdf0'
+    ],
+    index: 0,
+    transactionIndex: 0
+  },
+  Log {
+    provider: HardhatEthersProvider {
+      _hardhatProvider: [LazyInitializationProviderAdapter],
+      _networkName: 'localhost',
+      _blockListeners: [],
+      _transactionHashListeners: Map(0) {},
+      _eventListeners: []
+    },
+    transactionHash: '0x50b8734e13fd9aa490ee8832ce99c9c63fe3240ed9c4ec129bf0249c278a5e24',
+    blockHash: '0x70676fe561237b91e10a01107bd2d45e5fcfe031060832e8464f5e863f717752',
+    blockNumber: 22991084,
+    removed: undefined,
+    address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+    data: '0x00000000000000000000000000000000000000000000000000000000000f4434',
+    topics: [
+      '0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925',
+      '0x0000000000000000000000004f7c2894d115ac4b2b6b0544e3471fb10b4dfdf0',
+      '0x00000000000000000000000087870bca3f3fd6335c3f4ce8392d69350b4fa4e2'
+    ],
+    index: 1,
+    transactionIndex: 0
+  },
+  Log {
+    provider: HardhatEthersProvider {
+      _hardhatProvider: [LazyInitializationProviderAdapter],
+      _networkName: 'localhost',
+      _blockListeners: [],
+      _transactionHashListeners: Map(0) {},
+      _eventListeners: []
+    },
+    transactionHash: '0x50b8734e13fd9aa490ee8832ce99c9c63fe3240ed9c4ec129bf0249c278a5e24',
+    blockHash: '0x70676fe561237b91e10a01107bd2d45e5fcfe031060832e8464f5e863f717752',
+    blockNumber: 22991084,
+    removed: undefined,
+    address: '0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2',
+    data: '0x0000000000000000000000000000000000000000001e5950cfdfee00c7ff1827000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000028d5e28c17edd98bca0ef3000000000000000000000000000000000000000003ace5c6d2c45ee1b43eb76c000000000000000000000000000000000000000003d269c5d0b4305c5ca64f73',
+    topics: [
+      '0x804c9b842b2748a22bb64b345453a3de7ca54a6ca45ce00d415894979e22897a',
+      '0x000000000000000000000000a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48'
+    ],
+    index: 2,
+    transactionIndex: 0
+  },
+  Log {
+    provider: HardhatEthersProvider {
+      _hardhatProvider: [LazyInitializationProviderAdapter],
+      _networkName: 'localhost',
+      _blockListeners: [],
+      _transactionHashListeners: Map(0) {},
+      _eventListeners: []
+    },
+    transactionHash: '0x50b8734e13fd9aa490ee8832ce99c9c63fe3240ed9c4ec129bf0249c278a5e24',
+    blockHash: '0x70676fe561237b91e10a01107bd2d45e5fcfe031060832e8464f5e863f717752',
+    blockNumber: 22991084,
+    removed: undefined,
+    address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+    data: '0x00000000000000000000000000000000000000000000000000000000000f4434',
+    topics: [
+      '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+      '0x0000000000000000000000004f7c2894d115ac4b2b6b0544e3471fb10b4dfdf0',
+      '0x00000000000000000000000098c23e9d8f34fefb1b7bd6a91b7ff122f4e16f5c'
+    ],
+    index: 3,
+    transactionIndex: 0
+  },
+  Log {
+    provider: HardhatEthersProvider {
+      _hardhatProvider: [LazyInitializationProviderAdapter],
+      _networkName: 'localhost',
+      _blockListeners: [],
+      _transactionHashListeners: Map(0) {},
+      _eventListeners: []
+    },
+    transactionHash: '0x50b8734e13fd9aa490ee8832ce99c9c63fe3240ed9c4ec129bf0249c278a5e24',
+    blockHash: '0x70676fe561237b91e10a01107bd2d45e5fcfe031060832e8464f5e863f717752',
+    blockNumber: 22991084,
+    removed: undefined,
+    address: '0x87870Bca3F3fD6335C3F4ce8392D69350B4fA4E2',
+    data: '0x0000000000000000000000004f7c2894d115ac4b2b6b0544e3471fb10b4dfdf000000000000000000000000000000000000000000000000000000000000f4240000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001f4',
+    topics: [
+      '0xefefaba5e921573100900a3ad9cf29f222d995fb3b6045797eaea7521bd8d6f0',
+      '0x0000000000000000000000004f7c2894d115ac4b2b6b0544e3471fb10b4dfdf0',
+      '0x000000000000000000000000a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+      '0x0000000000000000000000000000000000000000000000000000000000000000'
+    ],
+    index: 4,
+    transactionIndex: 0
+  }
+]
+> iface.parseLog(txReceipt.logs[0])
+LogDescription {
+  fragment: EventFragment {
+    type: 'event',
+    inputs: [ [ParamType], [ParamType], [ParamType] ],
+    name: 'Transfer',
+    anonymous: false
+  },
+  name: 'Transfer',
+  signature: 'Transfer(address,address,uint256)',
+  topic: '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+  args: Result(3) [
+    '0x98C23E9d8f34FEFb1B7BD6a91B7FF122F4e16F5c',
+    '0x4F7c2894D115AC4b2b6B0544e3471fb10B4dfdF0',
+    1000000n
+  ]
+}
+> dp
+'0x4F7c2894D115AC4b2b6B0544e3471fb10B4dfdF0'
+> iface.parseLog(txReceipt.logs[3])
+LogDescription {
+  fragment: EventFragment {
+    type: 'event',
+    inputs: [ [ParamType], [ParamType], [ParamType] ],
+    name: 'Transfer',
+    anonymous: false
+  },
+  name: 'Transfer',
+  signature: 'Transfer(address,address,uint256)',
+  topic: '0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef',
+  args: Result(3) [
+    '0x4F7c2894D115AC4b2b6B0544e3471fb10B4dfdF0',
+    '0x98C23E9d8f34FEFb1B7BD6a91B7FF122F4e16F5c',
+    1000500n
+  ]
+}
+>
